@@ -1,0 +1,49 @@
+Given apatternand a stringstr, find ifstrfollows the same pattern.
+
+Herefollowmeans a full match, such that there is a bijection between a letter inpatternand anon-emptysubstring instr.
+
+Examples:
+
+pattern ="abab", str ="redblueredblue"should return true.
+
+pattern ="aaaa", str ="asdasdasdasd"should return true.
+
+pattern ="aabb", str ="xyzabcxzyabc"should return false.
+
+Notes:
+You may assume bothpatternandstrcontains only lowercase letters.
+
+290. Word pattern is an extension of word pattern. The difference is that there are no spaces in the word string, so we can’t split the words directly by spaces.
+
+You can use the backtracking method to judge each case, use the hash table to establish the mapping between pattern characters and words, and use the variables p and R
+
+to record the position of the current recursive pattern characters and word strings. In the recursive function, if P and R are equal to the length of the pattern string
+
+and single word string respectively, it means that the matching is completed successfully, and return to ture. Otherwise, if a If the match is reached and the other one
+
+is not, it means that the match failed and returns false.
+
+
+
+def solution(self,word,pattern):
+
+  def helper(indx,map,s):
+    if indx == len(pattern):
+      print(map)
+      return
+    
+    if map[pattern[indx]]:
+      prev = map.get(pattern[indx])
+      if len(s) >= len(prev):
+        left = s[0:len(prev)]
+        right = s[len(prev):]
+        if left == prev:
+          helper(indx+1,map,right)
+    else:
+      for i in range(len(s)):
+        left = s[:i+1]
+        right = s[i+1:]
+        map[pattern[indx]] = left
+        helper(indx+1,map,right)
+        map.pop(pattern[indx])
+        
